@@ -1,0 +1,23 @@
+id,first_author,year,journal,architecture,horizon,lrs,doi
+C1,Hooyberghs,2005,Atmospheric Environment,ANN,1-day ahead,2,10.1016/j.atmosenv.2005.01.050
+C2,Honoré,2008,Journal of Geophysical Research,CTM+MOS,3-day ahead,1,10.1029/2007JD008761
+C3,Brunelli,2007,Atmospheric Environment,Elman RNN,2-day ahead,2,10.1016/j.atmosenv.2006.11.053
+M1,Taşpınar,2015,Journal of Air & Waste Management,ANN+PCA,1-day ahead,3,10.1080/10962247.2015.1019652
+M2,Neal,2014,Atmospheric Environment,MOS,5-day ahead,1,10.1016/j.atmosenv.2014.09.026
+M3,Moustris,2013,Water Air & Soil Pollution,ANN,24h ahead,2,10.1007/s11270-013-1577-0
+M4,Taşpınar,2014,Fresenius Environmental Bulletin,ANN+stepwise,1-day ahead,3,—
+M5,Gocheva-Ilieva,2019,Neural Computing and Applications,CART+SARIMA,1/5-day,2,10.1007/s00521-018-3627-8
+D1,Zhou,2019,Journal of Cleaner Production,LSTM,24/48/72h,2,10.1016/j.jclepro.2018.10.243
+D2,Navares,2020,Ecological Informatics,LSTM,24h ahead,2,10.1016/j.ecoinf.2019.101019
+D3,Zhang,2023,Ecological Indicators,Transformer,24/48h,2,10.1016/j.ecolind.2023.111148
+D4,Samal,2021,Urban Climate,TCN,24h ahead,2,10.1016/j.uclim.2020.100800
+D5,Han,2022,IEEE Transactions on Big Data,BDL,48h ahead,2,10.1109/TBDATA.2021.3071803
+D6,Hu,2022,Atmospheric Pollution Research,Conv1D-LSTM,24/48h,2,10.1016/j.apr.2022.101374
+D7,Arsov,2021,Sensors (MDPI),RNN+CNN,6/12/24h,2,10.3390/s21041391
+
+# Notes:
+# - id: Era code (C=Classical, M=Machine Learning, D=Deep Learning) + number
+# - lrs: Leakage Risk Score (0=none, 1=low, 2=moderate, 3=severe)
+# - horizon: Reported maximum forecast horizon
+# - architecture: Primary forecasting architecture
+# - DOIs provided for all papers except M4 (journal has no DOI system)

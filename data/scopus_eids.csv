@@ -1,0 +1,15 @@
+eid
+2-s2.0-85000000001
+2-s2.0-85000000002
+2-s2.0-85000000003
+
+# NOTE: This is a 3-row placeholder
+# Full corpus EID list (n=2,425) available upon request to comply with 
+# Elsevier data sharing policy (Scopus Content Policy and Terms of Use)
+# 
+# To obtain full list:
+# 1. Execute query from data/scopus_query.txt
+# 2. Export EID field from all 2,425 results
+# 3. Replace this file with full export
+#
+# The 15 audited papers' EIDs and DOIs are in data/audit_sample_metadata.csv

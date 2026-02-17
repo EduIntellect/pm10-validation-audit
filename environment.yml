@@ -1,0 +1,15 @@
+name: pm10-audit
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy=1.25.2
+  - pandas=2.0.3
+  - matplotlib=3.7.2
+  - scikit-learn=1.3.0
+  - scipy=1.11.2
+  - openpyxl=3.1.2
+  - pip
+  - pip:
+    - pytest>=7.0

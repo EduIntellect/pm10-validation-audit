@@ -1,0 +1,53 @@
+# Scopus Search Query
+
+**Execution date:** February 14, 2026  
+**Database:** Scopus (Elsevier)  
+**Results:** 2,425 peer-reviewed journal articles
+
+## Complete Query String
+
+```
+TITLE-ABS-KEY((PM10 OR PM2.5 OR "particulate matter") 
+AND (forecast* OR predict* OR "time series" OR "machine learning" 
+     OR "deep learning" OR ARIMA OR LSTM) 
+AND ("air quality" OR "air pollution"))
+AND PUBYEAR > 1999 AND PUBYEAR < 2027
+AND DOCTYPE(ar) AND LANGUAGE(English)
+```
+
+## Query Components
+
+1. **Pollutant specification:**  
+   `PM10 OR PM2.5 OR "particulate matter"`
+
+2. **Forecasting task:**  
+   `forecast* OR predict* OR "time series" OR "machine learning" OR "deep learning" OR ARIMA OR LSTM`
+
+3. **Domain:**  
+   `"air quality" OR "air pollution"`
+
+4. **Temporal scope:**  
+   `PUBYEAR > 1999 AND PUBYEAR < 2027`
+
+5. **Document filters:**  
+   `DOCTYPE(ar)` — peer-reviewed journal articles only  
+   `LANGUAGE(English)` — English-language publications only
+
+## Export Instructions
+
+To reproduce the corpus:
+
+1. Go to scopus.com
+2. Paste the complete query string into Advanced Search
+3. Click "Search"
+4. Verify result count (should be 2,425 ± small variation due to indexing updates)
+5. Select all results → Export → CSV format
+6. Include fields: EID, Title, Abstract, Year, Authors, Source, DOI, Cited by count
+7. Save as `scopus_export_raw.csv`
+
+## Notes
+
+- Query designed for high recall (minimize false negatives)
+- Precision improved through subsequent lexical screening (Section 2.2)
+- No impact factor, geographic, or methodology filters applied at this stage
+- Corpus represents comprehensive coverage of Scopus-indexed PM forecasting literature

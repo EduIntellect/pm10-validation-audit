@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data (actual Scopus export is large, placeholder provided)
+data/scopus_export_raw.csv
+data/*_raw.csv
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Outputs (reproducible from scripts)
+screening/screening_results.csv
+screening/prevalence_summary.txt
+benchmark/hstar_results.csv
+benchmark/*.png
+figures/*.png
+figures/*.pdf
