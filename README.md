@@ -2,7 +2,7 @@
 
 **A Systematic Audit and Reproducible Evaluation Framework for Temporal Validation**
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18675212.svg)](https://doi.org/10.5281/zenodo.18675212)
 
 This repository contains all code and data supporting the systematic audit of temporal validation practices in PM₁₀ forecasting literature (García Crespi et al., 2026).
 
