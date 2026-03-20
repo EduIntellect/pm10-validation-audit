@@ -82,7 +82,7 @@ Tested on Ubuntu 24.04, macOS 14, Windows 11.
 
 ## Citation
 
-If you use this code or data, please cite the Zenodo software archive associated with this repository (concept DOI: 10.5281/zenodo.18675211; version DOI: see the latest Zenodo release).
+If you use this code or data, please cite the Zenodo software archive associated with this repository (concept DOI: 10.5281/zenodo.18675211; version DOI:  see the latest Zenodo release).
 
 ## License
 
