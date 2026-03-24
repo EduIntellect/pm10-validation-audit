@@ -1,98 +1,160 @@
-# Operational Predictability Limits in Multi-Step PM₁₀ Forecasting
+````markdown
+# A PRISMA-Based Quantitative Audit of Validation Practices in Particulate Matter Forecasting Studies
 
-**A Systematic Audit and Reproducible Evaluation Framework for Temporal Validation**
+**Evidence of Systematic Methodological Failures and a Minimum Evaluation Checklist**
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18675212.svg)](https://doi.org/10.5281/zenodo.18675212)
+[![DOI](https://zenodo.org/badge/DOI/[to-be-updated].svg)](https://doi.org/[to-be-updated])
 
-This repository contains all code and data supporting the systematic audit of temporal validation practices in PM₁₀ forecasting literature (García Crespi et al., 2026).
+This repository contains the materials supporting a **PRISMA-based quantitative audit** of methodological practices in particulate matter forecasting studies.
+
+The repository is designed to document, reproduce, and archive the review workflow used to identify, screen, assess, and audit the selected literature, with a specific focus on:
+
+- temporal validation practices,
+- leakage risk,
+- use of persistence and other simple baselines,
+- horizon-wise reporting,
+- and the operational interpretability of forecasting results.
+
+This repository corresponds to the **systematic review / methodological audit paper** and should not be confused with the separate repository associated with the PM10 forecasting framework paper.
+
+## Repository Scope
+
+This repository supports a review study centered on the following question:
+
+> **To what extent do recent particulate matter forecasting studies implement methodologically sound validation and evaluation practices?**
+
+The repository is intended to provide:
+
+- a transparent PRISMA workflow,
+- structured screening and eligibility materials,
+- full-text audit forms,
+- coded methodological variables,
+- quantitative summary tables,
+- and the basis for the final **minimum evaluation checklist**.
 
 ## Repository Structure
 
-```
-pm10-validation-audit/
-├── screening/          # Lexical screening pipeline (Section 2.2)
-├── benchmark/          # H* synthetic benchmark (Section 3.5)
-├── audit/              # Full-text audit forms and data (Section 2.3-2.4)
-├── figures/            # Scripts to reproduce Figures 1-4
-├── data/               # Corpus metadata and audit results
-├── requirements.txt    # Python dependencies
-├── environment.yml     # Conda environment
+```text
+slr-prisma-pm-forecasting/
+├── screening/          # Search, screening, and eligibility materials
+├── audit/              # Full-text audit forms, coding rules, and completed audits
+├── data/               # PRISMA counts, study metadata, and audit summary tables
+├── figures/            # Scripts and assets used to reproduce manuscript figures
+├── tables/             # Exportable tables for manuscript integration
+├── docs/               # Supplementary notes, protocol details, and working documents
+├── requirements.txt    # Python dependencies, if applicable
+├── environment.yml     # Conda environment, if applicable
 └── README.md           # This file
-```
+````
 
-## Quick Start
+## Review Workflow
 
-### Installation
+The review was conducted as a structured PRISMA-style workflow including:
 
-```bash
-# Option 1: pip
-pip install -r requirements.txt
+1. **Database search**
+2. **Deduplication**
+3. **Title/abstract screening**
+4. **Eligibility assessment**
+5. **Full-text methodological audit**
+6. **Quantitative synthesis of audit variables**
 
-# Option 2: conda
-conda env create -f environment.yml
-conda activate pm10-audit
-```
+## Search Sources
 
-### Reproduce Main Results
+* **Databases**: Scopus and Web of Science
+* **Search and filtering period**: March 21–23, 2026
+* **Search strings**: stored in the repository query files
+* **Export metadata**: stored in repository data files
 
-```bash
-# 1. Run lexical screening (generates prevalence estimates)
-cd screening
-python run_screening.py
+## PRISMA Materials
 
-# 2. Compute H* benchmark (Figure 4)
-cd ../benchmark
-python hstar_demo.py
+The repository includes, where applicable:
 
-# 3. Reproduce all figures
-cd ../figures
-python reproduce_figures.py
-```
+* search strings,
+* export instructions,
+* screening rules,
+* inclusion/exclusion criteria,
+* PRISMA flow counts,
+* full-text audit template,
+* completed audit forms,
+* and aggregated methodological results.
 
 ## Data Availability
 
-### Scopus Corpus (n=2,425)
-- **Query string**: See `data/scopus_query.txt`
-- **Execution date**: February 14, 2026
-- **Record identifiers**: `data/scopus_eids.csv` (compliance with Elsevier policy)
-- **Export instructions**: `data/scopus_export_howto.md`
+### Search and Screening Records
 
-### Audit Sample (n=15)
-- **Metadata**: `audit/audit_sample_metadata.csv` (DOIs, citations, eras)
-- **Audit form**: `audit/audit_form_template.xlsx` (3 sheets: form, completed example, rubric)
-- **Results**: `data/audit_results_table.csv`
+Repository files document the search sources, screening process, and eligibility decisions used in the review.
+
+### Audit Dataset
+
+The methodological audit dataset contains the coded variables used to quantify recurrent weaknesses in the reviewed studies, including:
+
+* validation design,
+* temporal split adequacy,
+* leakage risk,
+* baseline usage,
+* metric reporting,
+* and forecast horizon treatment.
+
+### Reproducibility Note
+
+This repository is intended to make the review process **transparent, inspectable, and reproducible**.
+Because bibliographic database licenses may restrict redistribution of full raw exports, the repository may store **record identifiers, derived tables, and documentation of export procedures** instead of full proprietary exports.
+
+## Main Outputs Supported by This Repository
+
+This repository supports the generation or archiving of the following outputs:
+
+* PRISMA flow information,
+* corpus and eligibility metadata,
+* full-text audit evidence,
+* methodological frequency tables,
+* quantitative summaries of recurrent failures,
+* and the final **minimum evaluation checklist** proposed in the paper.
+
+Where applicable, scripts are included to regenerate summary tables and figures from the coded audit data.
 
 ## Reproducibility
 
-All scripts are deterministic and produce identical outputs given the same inputs. Random operations (bootstrap CIs) use fixed seeds.
+All repository materials are organized to support transparent reconstruction of the review workflow and audit results.
 
 ### System Requirements
-- Python 3.11+
-- 8 GB RAM (sufficient for all analyses)
-- ~50 MB disk space
+
+* Python **[version to be inserted]**
+* Standard scientific Python stack **[if applicable]**
 
 ### Expected Runtime
-- Screening: < 5 min
-- Benchmark: < 2 min  
-- Figures: < 1 min
 
-Tested on Ubuntu 24.04, macOS 14, Windows 11.
+If scripts are provided, runtime depends on the specific task:
+
+* table generation: **[to be inserted]**
+* figure generation: **[to be inserted]**
+
+If no computational scripts are required for a given release, this repository should be interpreted primarily as a **transparent review archive** rather than a model-execution package.
 
 ## Citation
 
-## Citation
+If you use this repository, please cite the associated archive and the review paper:
 
-If you use this code or data, please cite the Zenodo software archive associated with this repository (concept DOI: 10.5281/zenodo.18675211; version DOI:  see the latest Zenodo release).
+**[Full citation to be inserted]**
+
+**Zenodo DOI:** **[to be inserted]**
 
 ## License
 
-Code: MIT License  
-Data: CC BY 4.0
+* **Code**: MIT License **[or to be confirmed]**
+* **Audit tables and derived materials**: CC BY 4.0 **[or to be confirmed]**
 
 ## Contact
 
-Federico García Crespi – fedeg@umh.es
+**Federico García Crespi**
+Universidad Miguel Hernández
+**[email to be inserted]**
 
 ## Acknowledgments
 
-Scopus bibliographic data provided by Elsevier. Inter-rater reliability assessment conducted with colleague from Universidad Miguel Hernández.
+Bibliographic records were retrieved from **Scopus** and **Web of Science** in accordance with the access conditions and export limitations of those services.
+
+Inter-rater agreement and methodological audit consistency checks were conducted within the review workflow described in the manuscript.
+
+```
+```
