@@ -59,6 +59,19 @@ aqui):
                    marcan H*_evento = NA en vez de 0, replicando la regla ya
                    congelada.
 
+Nota sobre F1 vs CSI: dado TP, FP, FN >= 0 y b = FP + FN,
+CSI = TP/(TP+b) y F1 = 2*TP/(2*TP+b). Despejando b desde CSI y
+sustituyendo en F1 se obtiene F1 = 2*CSI/(1+CSI), estrictamente
+creciente en CSI (biyeccion [0,1]->[0,1]). El criterio de H*_evento es
+un test de signo, skill_evento(h) = metric_modelo(h) - metric_baseline(h) > 0,
+no de magnitud. Como la misma transformacion monotona se aplica a ambos
+lados de la comparacion, CSI_modelo > CSI_baseline si y solo si
+F1_modelo > F1_baseline. Por tanto el horizonte de primer cruce
+calculado con F1 es identico al que se obtendria con CSI sobre la
+misma matriz de confusion: no es una aproximacion, es equivalente por
+construccion para este uso (comparacion de signo), aunque F1 y CSI
+difieran en valor absoluto.
+
 Salida: outputs/h3_table.csv (una fila por estacion x modelo) +
 outputs/h3_run_metadata.json.
 """
@@ -182,9 +195,21 @@ def main() -> None:
             "H_star_evento": "first-crossing, F1_model(abs_50) - F1_persistence(abs_50) > 0 for all j<=h; "
                               "abs_50 = 50 ug/m3 fixed threshold from scripts/03_exceedance_analysis.py; "
                               "NA if estimated exceedance count < 20 at any horizon in the common support; "
-                              "CSI not implemented anywhere in source repo, F1 used instead (not invented, "
-                              "it is the only composite event metric the repo actually computes)",
+                              "CSI not implemented anywhere in source repo, F1 used instead. This is not an "
+                              "approximation: F1 = 2*CSI/(1+CSI) is a strictly increasing bijection of CSI given "
+                              "the same TP/FP/FN, so sign(F1_model-F1_baseline) == sign(CSI_model-CSI_baseline) "
+                              "always. The first-crossing horizon under F1 is therefore identical to the one "
+                              "CSI would produce on the same confusion matrix.",
         },
+        "F1_vs_CSI_equivalence_proof": (
+            "F1 = 2*CSI/(1+CSI) given the same TP/FP/FN (b=FP+FN; CSI=TP/(TP+b), "
+            "F1=2*TP/(2*TP+b); solving b from CSI and substituting into F1 yields this identity). "
+            "It is a strictly increasing bijection on [0,1], so sign(F1_model-F1_baseline) == "
+            "sign(CSI_model-CSI_baseline) for every cell. H_star_evento is a sign test "
+            "(skill_evento(h)>0), not a magnitude test, so the F1-based first-crossing horizon "
+            "computed here is identical to what CSI would produce on the same predictions -- not "
+            "an approximation."
+        ),
         "known_deviation_from_frozen_protocol": (
             "H_star_skill uses persistence as the sole baseline. The frozen protocol required "
             "SS>0 against BOTH persistence and seasonal-naive; seasonal-naive-relative skill is "

@@ -8,11 +8,12 @@
   "definitions": {
     "H_star_skill": "first-crossing, skill>0 for all j<=h, skill=1-RMSE_model/RMSE_persistence (p32_ijf_ghostskill_hstar/src/diagnostics/hstar.py::compute_hstar(criterion='strict'))",
     "H_star_fidelidad": "first-crossing, alpha=Var(pred)/Var(true)>=0.5 for all j<=h (p32_ijf_ghostskill_hstar/src/diagnostics/variance.py, threshold matches scripts/15_decision_change_analysis.py ALPHA_PRIMARY)",
-    "H_star_evento": "first-crossing, F1_model(abs_50) - F1_persistence(abs_50) > 0 for all j<=h; abs_50 = 50 ug/m3 fixed threshold from scripts/03_exceedance_analysis.py; NA if estimated exceedance count < 20 at any horizon in the common support; CSI not implemented anywhere in source repo, F1 used instead (not invented, it is the only composite event metric the repo actually computes)"
+    "H_star_evento": "first-crossing, F1_model(abs_50) - F1_persistence(abs_50) > 0 for all j<=h; abs_50 = 50 ug/m3 fixed threshold from scripts/03_exceedance_analysis.py; NA if estimated exceedance count < 20 at any horizon in the common support; CSI not implemented anywhere in source repo, F1 used instead. This is not an approximation: F1 = 2*CSI/(1+CSI) is a strictly increasing bijection of CSI given the same TP/FP/FN, so sign(F1_model-F1_baseline) == sign(CSI_model-CSI_baseline) always. The first-crossing horizon under F1 is therefore identical to the one CSI would produce on the same confusion matrix."
   },
+  "F1_vs_CSI_equivalence_proof": "F1 = 2*CSI/(1+CSI) given the same TP/FP/FN (b=FP+FN; CSI=TP/(TP+b), F1=2*TP/(2*TP+b); solving b from CSI and substituting into F1 yields this identity). It is a strictly increasing bijection on [0,1], so sign(F1_model-F1_baseline) == sign(CSI_model-CSI_baseline) for every cell. H_star_evento is a sign test (skill_evento(h)>0), not a magnitude test, so the F1-based first-crossing horizon computed here is identical to what CSI would produce on the same predictions -- not an approximation.",
   "known_deviation_from_frozen_protocol": "H_star_skill uses persistence as the sole baseline. The frozen protocol required SS>0 against BOTH persistence and seasonal-naive; seasonal-naive-relative skill is not materialized as a column in any aggregated table in the source repo (only its own skill-vs-persistence is), so it is not computed here rather than approximated.",
   "script": "scripts/compute_h3_table.py",
-  "script_sha256": "bddf54bfae7d410265ddbf6a2a9e1e88190a2cc618aba07b507873a38584a256",
+  "script_sha256": "c877432c1f9647da1f2d2343b2c14534b5b3e9a0f4d1ba2f5043d49a6468839f",
   "output": "outputs/h3_table.csv",
   "n_rows": 85,
   "n_datasets": 17,
