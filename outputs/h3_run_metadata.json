@@ -1,0 +1,20 @@
+{
+  "source_repo": "fedeg-umh-es/varret-pm10-paper",
+  "source_commit": "4a49b08b041c578ec5981dc1472125b2af0a4d59",
+  "source_files": {
+    "master_diagnostic_table.csv": "6dfb12c5a8a1c2263ecfad71e441cd2af6f451c9b73ba9049b1986eaeee62af6",
+    "exceedance_all_stations.csv": "4be164b72ee8332a9ae379d0179368efb04238cd78d22383d9844a2063a349dd"
+  },
+  "definitions": {
+    "H_star_skill": "first-crossing, skill>0 for all j<=h, skill=1-RMSE_model/RMSE_persistence (p32_ijf_ghostskill_hstar/src/diagnostics/hstar.py::compute_hstar(criterion='strict'))",
+    "H_star_fidelidad": "first-crossing, alpha=Var(pred)/Var(true)>=0.5 for all j<=h (p32_ijf_ghostskill_hstar/src/diagnostics/variance.py, threshold matches scripts/15_decision_change_analysis.py ALPHA_PRIMARY)",
+    "H_star_evento": "first-crossing, F1_model(abs_50) - F1_persistence(abs_50) > 0 for all j<=h; abs_50 = 50 ug/m3 fixed threshold from scripts/03_exceedance_analysis.py; NA if estimated exceedance count < 20 at any horizon in the common support; CSI not implemented anywhere in source repo, F1 used instead (not invented, it is the only composite event metric the repo actually computes)"
+  },
+  "known_deviation_from_frozen_protocol": "H_star_skill uses persistence as the sole baseline. The frozen protocol required SS>0 against BOTH persistence and seasonal-naive; seasonal-naive-relative skill is not materialized as a column in any aggregated table in the source repo (only its own skill-vs-persistence is), so it is not computed here rather than approximated.",
+  "script": "scripts/compute_h3_table.py",
+  "script_sha256": "bddf54bfae7d410265ddbf6a2a9e1e88190a2cc618aba07b507873a38584a256",
+  "output": "outputs/h3_table.csv",
+  "n_rows": 85,
+  "n_datasets": 17,
+  "n_models": 5
+}
