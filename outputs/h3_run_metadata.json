@@ -4,6 +4,7 @@
   "source_files": {
     "master_diagnostic_table.csv": "6dfb12c5a8a1c2263ecfad71e441cd2af6f451c9b73ba9049b1986eaeee62af6"
   },
+  "provenance_statement": "Preexisting components and thresholds; deterministic H3 reduction. The 'strict' reducer and each component criterion (skill>0, alpha>=0.50, recall_p75>=0.20) come verbatim from frozen code. The COMPOSITION of those components into three H3 horizons is materialized by this PR: the project had no frozen definition of H*_fidelidad or H*_evento as horizons. No new metric is constructed.",
   "reduction_rule": "strict / first-crossing, identical for all three dimensions: p32_ijf_ghostskill_hstar/src/diagnostics/hstar.py::compute_hstar(criterion='strict') -- last consecutive horizon from h=1 satisfying the condition, stop at first failure.",
   "definitions": {
     "H_star_skill": {
@@ -23,6 +24,7 @@
     }
   },
   "common_support": {
+    "verified_at_runtime_by": "assert_common_support(): aborts unless every (dataset,horizon) contains all four common-support models with exactly equal n",
     "shared_n_models": [
       "hgb_direct",
       "ridge_direct",
@@ -38,7 +40,7 @@
     "low_sample_flag_in_source": "False for all 595 cells; no additional exclusion rule is introduced by this script."
   },
   "script": "scripts/compute_h3_table.py",
-  "script_sha256": "c3b447736566694de5f9ffb440c804a43684f477f3c911d77d93bb3969fe7fd0",
+  "script_sha256": "b7b0d7b746d5c1ab9a8a0cde18ce3d2507927fcac4f4d5a6cc7d81185e24fc6d",
   "output": "outputs/h3_table.csv",
   "n_rows": 85,
   "n_datasets": 17,

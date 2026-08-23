@@ -7,12 +7,19 @@ fedeg-umh-es/varret-pm10-paper (commit 4a49b08b041c578ec5981dc1472125b2af0a4d59)
 fichero outputs/tables/master_diagnostic_table.csv (595 filas = 17 estaciones
 x 7 horizontes x 5 modelos).
 
-REGLA DE ESTE SCRIPT: las tres definiciones se toman LITERALMENTE del codigo
-congelado. No se construye ningun criterio nuevo, no se combina una metrica
-con un baseline que el codigo no combine, y no se introduce ninguna regla de
-exclusion que el artefacto no declare.
+REGLA DE ESTE SCRIPT: componentes y umbrales preexistentes; reduccion H3
+determinista.
 
-Definiciones (todas preexistentes, con su procedencia exacta):
+Es decir: el reductor "strict" y cada criterio componente (skill>0,
+alpha>=0.50, recall_p75>=0.20) provienen literalmente del codigo congelado y
+no se alteran. Lo que se materializa EN ESTE PR es la composicion de esos
+componentes en tres horizontes H3: el proyecto no tenia una definicion
+congelada de H*_fidelidad ni de H*_evento como horizontes. No se construye
+ninguna metrica nueva, no se combina una metrica con un baseline que el
+codigo no combine, y no se introduce ninguna regla de exclusion que el
+artefacto no declare.
+
+Componentes y umbrales (preexistentes, con su procedencia exacta):
 
   Regla de reduccion comun -- "strict" / primer cruce:
       p32_ijf_ghostskill_hstar/src/diagnostics/hstar.py::compute_hstar
@@ -41,10 +48,13 @@ Definiciones (todas preexistentes, con su procedencia exacta):
                 recall_p75 = recall de superacion del percentil 75 movil del
                 historico previo al origen (scripts/03_exceedance_analysis.py).
 
-SOPORTE COMUN (declarado, no corregido aqui):
+SOPORTE COMUN (verificado en ejecucion por assert_common_support(), no solo
+declarado):
   master_diagnostic_table.csv trae la columna "n" (tamano muestral por celda).
   Los modelos hgb_direct, ridge_direct, seasonal_naive y stl_ridge_direct
   comparten n exactamente dentro de cada (dataset, horizonte): n ~ 1118-1731.
+  El script lo COMPRUEBA celda a celda y aborta si alguna (dataset,horizonte)
+  no tiene los cuatro modelos o no comparte n exacto entre ellos.
   sarima NO: n ~ 127-180, un orden de magnitud menor, porque se genero con
   origenes cada 14 dias (scripts/02_generate_sarima_predictions.py
   --origin-step 14) mientras el resto usa origenes diarios. Por tanto las
@@ -79,6 +89,7 @@ ALPHA_THRESH = 0.50   # variance.py collapse_threshold == script 15 ALPHA_PRIMAR
 RECALL_THRESH = 0.20  # script 15 RECALL_PRIMARY
 HORIZONS = list(range(1, 8))
 NON_COMMON_SUPPORT_MODELS = {"sarima"}  # origin-step 14, n ~10x menor
+COMMON_SUPPORT_MODELS = ["hgb_direct", "ridge_direct", "seasonal_naive", "stl_ridge_direct"]
 
 
 def sha256(path: Path) -> str:
@@ -97,8 +108,49 @@ def hstar_strict(values_by_h: dict[int, float], predicate) -> int:
     return hstar
 
 
+def assert_common_support(master: pd.DataFrame) -> None:
+    """Comprueba el soporte comun, no lo asume.
+
+    Para cada (dataset, horizonte) exige que los cuatro modelos de
+    COMMON_SUPPORT_MODELS esten presentes y compartan EXACTAMENTE el mismo n.
+    Aborta si no se cumple: sin esa igualdad, las celdas no son comparables
+    entre modelos y la tabla H3 no debe emitirse.
+    """
+    sub = master[master["model"].isin(COMMON_SUPPORT_MODELS)]
+
+    coverage = sub.groupby(["dataset", "horizon"])["model"].nunique()
+    missing = coverage[coverage != len(COMMON_SUPPORT_MODELS)]
+    if len(missing):
+        raise AssertionError(
+            f"Soporte comun roto: {len(missing)} celdas (dataset,horizon) no tienen los "
+            f"{len(COMMON_SUPPORT_MODELS)} modelos de soporte comun. Ejemplos:\n"
+            f"{missing.head(10).to_string()}"
+        )
+
+    distinct_n = sub.groupby(["dataset", "horizon"])["n"].nunique()
+    mismatched = distinct_n[distinct_n > 1]
+    if len(mismatched):
+        detail = (
+            sub.set_index(["dataset", "horizon"])
+            .loc[mismatched.index]
+            .groupby(["dataset", "horizon"])
+            .apply(lambda x: dict(zip(x["model"], x["n"])))
+        )
+        raise AssertionError(
+            f"Soporte comun roto: {len(mismatched)} celdas (dataset,horizon) donde los modelos "
+            f"NO comparten n exacto. Ejemplos:\n{detail.head(10).to_string()}"
+        )
+
+    n_cells = len(distinct_n)
+    print(
+        f"[common support] OK: {n_cells} celdas (dataset,horizon); los {len(COMMON_SUPPORT_MODELS)} "
+        f"modelos presentes y con n identico en todas."
+    )
+
+
 def main() -> None:
     master = pd.read_csv(MASTER)
+    assert_common_support(master)
 
     rows = []
     for (dataset, model), g in master.groupby(["dataset", "model"], sort=True):
@@ -123,6 +175,11 @@ def main() -> None:
                 "H_star_skill_censored": h_skill == 7,
                 "H_star_evento_censored": h_evento == 7,
                 "H_star_fidelidad_censored": h_fidelidad == 7,
+                # Etiquetas de PRESENTACION: censura derecha en h=7 se muestra ">=7".
+                # Los valores numericos de arriba NO se alteran.
+                "H_star_skill_display": ">=7" if h_skill == 7 else str(h_skill),
+                "H_star_evento_display": ">=7" if h_evento == 7 else str(h_evento),
+                "H_star_fidelidad_display": ">=7" if h_fidelidad == 7 else str(h_fidelidad),
                 "common_support": model not in NON_COMMON_SUPPORT_MODELS,
                 "n_min": int(g["n"].min()),
                 "n_max": int(g["n"].max()),
@@ -139,6 +196,13 @@ def main() -> None:
         "source_repo": SOURCE_REPO,
         "source_commit": SOURCE_COMMIT,
         "source_files": {"master_diagnostic_table.csv": sha256(MASTER)},
+        "provenance_statement": (
+            "Preexisting components and thresholds; deterministic H3 reduction. The 'strict' "
+            "reducer and each component criterion (skill>0, alpha>=0.50, recall_p75>=0.20) come "
+            "verbatim from frozen code. The COMPOSITION of those components into three H3 "
+            "horizons is materialized by this PR: the project had no frozen definition of "
+            "H*_fidelidad or H*_evento as horizons. No new metric is constructed."
+        ),
         "reduction_rule": (
             "strict / first-crossing, identical for all three dimensions: "
             "p32_ijf_ghostskill_hstar/src/diagnostics/hstar.py::compute_hstar(criterion='strict') "
@@ -167,7 +231,9 @@ def main() -> None:
             },
         },
         "common_support": {
-            "shared_n_models": ["hgb_direct", "ridge_direct", "seasonal_naive", "stl_ridge_direct"],
+            "verified_at_runtime_by": "assert_common_support(): aborts unless every (dataset,horizon) "
+                                       "contains all four common-support models with exactly equal n",
+            "shared_n_models": COMMON_SUPPORT_MODELS,
             "shared_n_range": "1118-1731, identical across these models within each (dataset,horizon)",
             "excluded_from_cross_model_comparison": ["sarima"],
             "sarima_n_range": "127-180",
